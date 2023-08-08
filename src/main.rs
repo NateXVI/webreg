@@ -1,6 +1,7 @@
 mod cli;
 mod fetch;
 
+use directories_next::ProjectDirs;
 use indicatif::{ProgressBar, ProgressStyle};
 use regex;
 use rocksdb::DB;
@@ -24,7 +25,11 @@ fn main() {
 
     let regex = args.regex;
 
-    let db = Arc::new(DB::open_default("tmp/cache").unwrap());
+    let dirs =
+        ProjectDirs::from("com", "NateXVI", "webreg").expect("Could not get project directoriess");
+    let db_path = dirs.cache_dir().join("db");
+    fs::create_dir_all(&db_path).expect("Could not create cache directory");
+    let db = Arc::new(DB::open_default(db_path).expect("Could not open cache database"));
     let pool = ThreadPool::default();
     let (tx, rx) = channel();
 
@@ -32,7 +37,6 @@ fn main() {
     let pb = ProgressBar::new(total as u64);
     pb.set_style(
         ProgressStyle::default_bar()
-            // .template("[{elapsed_precise}] [{bar:40.cyan/blue}] {pos}/{len} ({eta})")
             .template("[{elapsed_precise}] {bar:40.cyan/blue} {pos:>7}/{len:7} ({eta}) {msg}")
             .unwrap(),
     );
