@@ -7,7 +7,7 @@ use clap::Parser;
 use libc::isatty;
 
 #[derive(Debug, Parser)]
-#[command(name = "Keyword Finder")]
+#[command(name = "webreg")]
 #[command(about = "Test if a list of websites match a given regex")]
 #[command(version)]
 pub struct Cli {
@@ -18,6 +18,10 @@ pub struct Cli {
     /// A file containing a list of urls
     #[arg(short = 'i', long, group = "input")]
     pub file: Option<PathBuf>,
+
+    /// Name of the folder to save the results to
+    #[arg(short = 'n', long)]
+    pub name: Option<String>,
 
     /// Case insensitive search
     #[arg(short, long)]

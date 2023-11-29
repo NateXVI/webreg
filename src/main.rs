@@ -94,8 +94,15 @@ fn main() {
 
     pb.lock().unwrap().finish_and_clear();
 
+    let folder = args.name.unwrap_or(regex.clone());
+
     if args.save {
-        save_results(&regex, matches.clone(), no_matches.clone(), errors.clone());
+        save_results(&folder, matches.clone(), no_matches.clone(), errors.clone());
+        print!("./results/{folder}\n", folder = folder);
+        print!("matches {matches}\n", matches = matches.len());
+        print!("none    {no_matches}\n", no_matches = no_matches.len());
+        print!("errors  {errors}\n", errors = errors.len());
+        print!("total   {total}\n", total = total);
     } else if !matches.is_empty() {
         let output = matches.join("\n");
         print!("{}\n", output);
